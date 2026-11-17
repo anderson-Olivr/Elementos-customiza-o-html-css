@@ -1,0 +1,370 @@
+<!-- BAU DO MINECRAFT-->
+<!-- From Uiverse.io by mamyapro123 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAÚ DO MINECRAFT</title>
+
+    <style>
+        /* From Uiverse.io by mamyapro123 */ 
+.mc-environment {
+  /* Scoped Variables */
+  --w: 140px;
+  --d: 140px;
+  --h-base: 100px;
+  --h-lid: 40px;
+
+  /* EXACT Colors Sampled from Reference Image */
+  --mc-border: #251a10; /* Dark grey/brown iron banding */
+  --mc-wood: #825425; /* Base oak wood color */
+  --mc-wood-light: #996531; /* Plank top edge highlight */
+  --mc-wood-dark: #593615; /* Plank bottom edge shadow */
+
+  --mc-latch-light: #d1d1d1; /* Top of the metal latch */
+  --mc-latch-base: #8f8f8f; /* Middle of the metal latch */
+  --mc-latch-dark: #565656; /* Bottom of the metal latch */
+  --mc-latch-outline: #1a1a1a; /* Dark outline for the metal */
+
+  --mc-void: #050302; /* Inside the chest */
+
+  /* Merged Body & Environment Styles */
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+  box-sizing: border-box;
+}
+
+.mc-chest-wrapper {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  margin-top: 100px;
+}
+
+/* File Input Interaction Overlay */
+.mc-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 100;
+  cursor: pointer;
+}
+
+/* 3D Isometric Chest Rig */
+.mc-chest {
+  position: relative;
+  width: var(--w);
+  height: calc(var(--h-base) + var(--h-lid));
+  transform-style: preserve-3d;
+  /* Replicated the exact isometric camera angle from your image */
+  transform: rotateX(-24deg) rotateY(-40deg);
+  pointer-events: none;
+}
+
+.chest-part {
+  position: absolute;
+  left: 0;
+  width: var(--w);
+  transform-style: preserve-3d;
+}
+
+/* Base Configuration */
+.chest-base {
+  top: var(--h-lid);
+  height: var(--h-base);
+}
+
+/* Lid Configuration & Precise Hinge */
+.chest-lid {
+  top: 0;
+  height: var(--h-lid);
+  /* Pivot exactly at the bottom-back edge */
+  transform-origin: 50% var(--h-lid) -70px;
+  transition: transform 0.45s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+/* Open Animation */
+.mc-file-input:hover ~ .mc-chest .chest-lid {
+  transform: rotateX(100deg);
+}
+.mc-file-input:active ~ .mc-chest .chest-lid {
+  transform: rotateX(110deg);
+}
+
+/* Base Styles & Procedural Pixel Texture */
+.c-face {
+  position: absolute;
+  box-sizing: border-box;
+  background-color: var(--mc-wood);
+  /* 1 pixel (10px) thick border mimicking the iron bands */
+  border: 10px solid var(--mc-border);
+
+  /* Authentic pixel-art plank shading perfectly matching the image */
+  background-image: 
+    /* Horizontal Planks: Light highlight on top, Dark shadow on bottom of each 20px plank */
+    repeating-linear-gradient(
+      to bottom,
+      var(--mc-wood-light) 0px,
+      var(--mc-wood-light) 4px,
+      transparent 4px,
+      transparent 16px,
+      var(--mc-wood-dark) 16px,
+      var(--mc-wood-dark) 20px
+    ),
+    /* Vertical Wood Grain variations */
+      repeating-linear-gradient(
+        to right,
+        transparent 0px,
+        transparent 10px,
+        rgba(0, 0, 0, 0.06) 10px,
+        rgba(0, 0, 0, 0.06) 20px,
+        rgba(255, 255, 255, 0.06) 20px,
+        rgba(255, 255, 255, 0.06) 40px,
+        rgba(0, 0, 0, 0.12) 40px,
+        rgba(0, 0, 0, 0.12) 50px
+      );
+}
+
+/* Directional Minecraft Lighting to match the original render shading */
+.base-front,
+.lid-front {
+  filter: brightness(1);
+}
+.base-left,
+.lid-left {
+  filter: brightness(0.85);
+}
+.base-right,
+.lid-right {
+  filter: brightness(0.65);
+}
+.base-back,
+.lid-back {
+  filter: brightness(0.5);
+}
+.lid-top {
+  filter: brightness(1.2);
+}
+
+/* --- Assembling Base Geometry --- */
+.base-front {
+  width: var(--w);
+  height: var(--h-base);
+  transform: translateZ(70px);
+}
+.base-back {
+  width: var(--w);
+  height: var(--h-base);
+  transform: rotateY(180deg) translateZ(70px);
+}
+.base-left {
+  width: var(--d);
+  height: var(--h-base);
+  transform: rotateY(-90deg) translateZ(70px);
+}
+.base-right {
+  width: var(--d);
+  height: var(--h-base);
+  transform: rotateY(90deg) translateZ(70px);
+}
+.base-bottom {
+  width: var(--w);
+  height: var(--d);
+  transform: rotateX(-90deg) translateZ(calc(var(--h-base) - 70px));
+  background: var(--mc-border);
+}
+/* Hollow Inside of the Base */
+.base-top {
+  width: var(--w);
+  height: var(--d);
+  transform: rotateX(90deg) translateZ(70px);
+  background-color: var(--mc-void);
+  background-image: none;
+  box-shadow: inset 0 0 40px #000;
+}
+
+/* --- Assembling Lid Geometry --- */
+.lid-front {
+  width: var(--w);
+  height: var(--h-lid);
+  transform: translateZ(70px);
+}
+.lid-back {
+  width: var(--w);
+  height: var(--h-lid);
+  transform: rotateY(180deg) translateZ(70px);
+}
+.lid-left {
+  width: var(--d);
+  height: var(--h-lid);
+  transform: rotateY(-90deg) translateZ(70px);
+}
+.lid-right {
+  width: var(--d);
+  height: var(--h-lid);
+  transform: rotateY(90deg) translateZ(70px);
+}
+.lid-top {
+  width: var(--w);
+  height: var(--d);
+  transform: rotateX(90deg) translateZ(70px);
+}
+/* Inside of the Lid */
+.lid-bottom {
+  width: var(--w);
+  height: var(--d);
+  transform: rotateX(-90deg) translateZ(calc(var(--h-lid) - 70px));
+  background-color: var(--mc-wood-dark);
+  background-image: none;
+  border: 10px solid var(--mc-border);
+}
+
+/* --- Solid 3D Metal Latch Rig --- */
+.mc-latch {
+  position: absolute;
+  width: 20px;
+  height: 40px;
+  left: calc(50% - 10px);
+  top: calc(var(--h-lid) - 20px);
+  transform-style: preserve-3d;
+  transform: translateZ(75px);
+}
+
+.latch-f {
+  position: absolute;
+  box-sizing: border-box;
+  background-color: var(--mc-latch-base);
+  border: 2px solid var(--mc-latch-outline);
+}
+
+/* Exact gradient mapping for the shiny metal latch from the image */
+.latch-front {
+  width: 20px;
+  height: 40px;
+  transform: translateZ(5px);
+  background: linear-gradient(
+    to bottom,
+    var(--mc-latch-light) 0px,
+    var(--mc-latch-light) 10px,
+    var(--mc-latch-base) 10px,
+    var(--mc-latch-base) 28px,
+    var(--mc-latch-dark) 28px
+  );
+}
+.latch-back {
+  width: 20px;
+  height: 40px;
+  transform: rotateY(180deg) translateZ(5px);
+}
+.latch-left {
+  width: 10px;
+  height: 40px;
+  left: 5px;
+  transform: rotateY(-90deg) translateZ(10px);
+  background: var(--mc-latch-dark);
+}
+.latch-right {
+  width: 10px;
+  height: 40px;
+  left: 5px;
+  transform: rotateY(90deg) translateZ(10px);
+  background: var(--mc-latch-dark);
+}
+.latch-top {
+  width: 20px;
+  height: 10px;
+  top: 15px;
+  transform: rotateX(90deg) translateZ(20px);
+  background: var(--mc-latch-light);
+}
+.latch-bottom {
+  width: 20px;
+  height: 10px;
+  top: 15px;
+  transform: rotateX(-90deg) translateZ(20px);
+  background: var(--mc-latch-dark);
+}
+
+/* UI Status Text */
+.mc-chest-text {
+  margin-top: 60px;
+  /* Removed external font, replaced with web-safe monospace stack */
+  font-family: ui-monospace, "Courier New", Courier, monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #aaaaaa;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-shadow: 2px 2px 0 #151515;
+  transition:
+    transform 0.2s,
+    color 0.2s;
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Minecraft Yellow Highlight on Hover */
+.mc-file-input:hover ~ .mc-chest-text {
+  color: #ffff55;
+  transform: translateY(-2px);
+}
+
+    </style>
+</head>
+<body>
+    <div class="mc-environment">
+        <div class="mc-chest-wrapper">
+            <input type="file" id="mc-file" class="mc-file-input" />
+
+            <div class="mc-chest">
+                <div class="chest-part chest-base">
+                    <div class="c-face base-front"></div>
+                    <div class="c-face base-back"></div>
+                    <div class="c-face base-left"></div>
+                    <div class="c-face base-right"></div>
+                    <div class="c-face base-top"></div>
+                    <div class="c-face base-bottom"></div>
+                </div>
+
+                <div class="chest-part chest-lid">
+                    <div class="c-face lid-front"></div>
+                    <div class="c-face lid-back"></div>
+                    <div class="c-face lid-left"></div>
+                    <div class="c-face lid-right"></div>
+                    <div class="c-face lid-top"></div>
+                    <div class="c-face lid-bottom"></div>
+
+                    <div class="mc-latch">
+                        <div class="latch-f latch-front"></div>
+                        <div class="latch-f latch-back"></div>
+                        <div class="latch-f latch-left"></div>
+                        <div class="latch-f latch-right"></div>
+                        <div class="latch-f latch-top"></div>
+                        <div class="latch-f latch-bottom"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mc-text" class="mc-chest-text">SELECT FILE</div>
+        </div>
+    </div>
+</body>
+
+</html>
